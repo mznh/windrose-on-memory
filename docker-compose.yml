@@ -1,0 +1,52 @@
+services:
+  # 定期的sync+マウント維持
+  data-sync:
+    build: ./data-sync
+    container_name: windrose-sub-ram-sync
+    restart: unless-stopped
+    stop_grace_period: 45s
+    volumes:
+      - ./backup_saved:/backup
+      - windrose-saved:/saved
+  # 起動時のデータロード
+  data-loader:
+    build: ./data-loader
+    container_name: windrose-sub-ram-loader
+    volumes:
+      - ./backup_saved:/backup
+      - windrose-saved:/saved
+    depends_on:
+      data-sync:
+        condition: service_started
+  # サーバー本体
+  windrose:
+    image: indifferentbroccoli/windrose-server-docker
+    restart: unless-stopped
+    container_name: windrose-sub-ram
+    stop_grace_period: 60s
+    network_mode: host
+    env_file:
+      - .env
+    environment:
+      - PUID=1002
+      - PGID=1002
+      - TZ=Asia/Tokyo
+    volumes:
+      - windrose-data:/home/steam/server-files
+      - windrose-saved:/home/steam/server-files/R5/Saved
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+    depends_on:
+      data-loader:
+        condition: service_completed_successfully
+      data-sync:
+        condition: service_started
+volumes:
+  windrose-data:
+  windrose-saved:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1G,uid=1002,gid=1002
