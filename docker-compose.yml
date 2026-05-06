@@ -12,6 +12,8 @@ services:
   data-loader:
     build: ./data-loader
     container_name: windrose-sub-ram-loader
+    env_file:
+      - .env
     volumes:
       - ./backup_saved:/backup
       - windrose-saved:/saved
@@ -27,10 +29,6 @@ services:
     network_mode: host
     env_file:
       - .env
-    environment:
-      - PUID=1002
-      - PGID=1002
-      - TZ=Asia/Tokyo
     volumes:
       - windrose-data:/home/steam/server-files
       - windrose-saved:/home/steam/server-files/R5/Saved
@@ -49,4 +47,4 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: size=1G,uid=1002,gid=1002
+      o: size=1G,uid=${PUID},gid=${PGID}
