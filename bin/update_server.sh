@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # --- 設定 ---
-WORK_DIR="/home/windrose/sub-ram"
+cd "$(dirname "$0")/.."
+WORK_DIR="$(pwd)"
 BACKUP_DIR="${WORK_DIR}/backup_saved"
 ARCHIVE_DIR="${WORK_DIR}/archives"
 KEEP_DAYS=7 # 保持する日数

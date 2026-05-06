@@ -1,6 +1,7 @@
 #!/bin/bash
 
-WORK_DIR="/home/windrose/sub-ram"
+cd "$(dirname "$0")/.."
+WORK_DIR="$(pwd)"
 
 # フラグの初期化（デフォルトはどちらも表示しない設定）
 SHOW_EXPIRED=false
