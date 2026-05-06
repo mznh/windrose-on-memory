@@ -3,7 +3,7 @@ services:
   data-sync:
     build: ./data-sync
     container_name: windrose-sub-ram-sync
-    restart: unless-stopped
+    restart: 'no'
     stop_grace_period: 45s
     volumes:
       - ./backup_saved:/backup
@@ -23,9 +23,9 @@ services:
   # サーバー本体
   windrose:
     image: indifferentbroccoli/windrose-server-docker
-    restart: unless-stopped
+    restart: 'no'
     container_name: windrose-sub-ram
-    stop_grace_period: 60s
+    stop_grace_period: 30s
     network_mode: host
     env_file:
       - .env
